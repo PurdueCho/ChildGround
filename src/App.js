@@ -5,26 +5,25 @@ import GetData from './GetData'
 import MyForm from './MyForm'
 
 class App extends Component {
-  constructor() {
-    super();
-  };
 
   state = {};
 
   handleCreate = (data) => {
     this.setState({
-      form: data,
+      c_query: data.c_query,
+      query: data.query,
     });
   }
 
   render() {
     // console.log('did render')
-    const {form} = this.state;
+    const {c_query, query} = this.state;
+    console.log(c_query, query);
     return (
       <div>
         <MyForm onCreate={this.handleCreate} />
-        {console.log(form)}
-        { this.state.form ? <GetData /> : '' }
+        {/* {console.log(form)} */}
+        { this.state.query ? <GetData c_query={c_query} query={query} /> : '' }
       </div>
     );
   }
