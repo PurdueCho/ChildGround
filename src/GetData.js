@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Score from './Score';
-import './App.css';
+import './GetData.css';
 
 const API = "https://apis.solarialabs.com/shine/v1/total-home-scores/reports?";
 const DEFAULT_QUERY = "street-number=110&street-name=E%20Columbia%20street&city=West%20lafayette&state=IN";
@@ -23,7 +23,7 @@ class GetData extends Component {
     const score = this.state.scores;
     // console.log(c_score, score);
     const result = this._getResult();
-    console.log(result)
+    // console.log(result)
 
     return <Score
       c_quite={c_score.quiet ? c_score.quiet.value : 'Sorry, no information on this address'}
@@ -55,7 +55,7 @@ class GetData extends Component {
     const WORTH = "Worth";
     const FAILURE = "Sorry, not enough information to estimate";
 
-    console.log(result)
+    // console.log(result)
     if (result === 0) return FAILURE;
     if (result < 10) return NOTWORTH
     if (result >= 10 && result <30) return MODERATE
@@ -93,7 +93,7 @@ class GetData extends Component {
     // console.log('did render')
     const {scores} = this.state
     return (
-      <div className={ scores ? "App" : "App--loading" } >
+      <div className={ scores ? "GetData" : "GetData--loading" } >
         { this.state.scores ? this._renderScores() : 'Loading' }
       </div>
     );

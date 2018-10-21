@@ -68,7 +68,7 @@ function Score ({c_quite, c_safety, c_traffic, quite, safety, traffic, result, c
                 </Card>
             </div>
             <div className="submit_btn">
-                <Button color="primary" variant="contained"><a href="http://localhost:3000/">Go Back</a></Button>
+                <Button color="primary" variant="contained"><a href="https://childground-9e779.firebaseapp.com/">Go Back</a></Button>
             </div>
         </div>
         
