@@ -19,13 +19,14 @@ const styles = theme => ({
 });
 
 function Score ({c_quite, c_safety, c_traffic, quite, safety, traffic, result, c_name, name}) {
-
+    let c_url = "https://www.google.com/maps/search/" + c_name;
+    let url = "https://www.google.com/maps/search/" + name;
     return (
         <div className ="contaioner">
             <div className = "Upper">
                 <Card className ="c_Scores">
                     <CardActionArea>
-                        <img src = {card} alt ="Sample House" />
+                        <a href={c_url} target="_blank"><img src = {card} alt ="Sample House" /></a>
                     </CardActionArea>
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="h2">
@@ -40,7 +41,7 @@ function Score ({c_quite, c_safety, c_traffic, quite, safety, traffic, result, c
                 </Card>
                 <Card className ="Scores">
                     <CardActionArea>
-                        <img src = {card} alt ="Sample House" />
+                        <a href={url} target="_blank"><img src = {card} alt ="Sample House" /></a>
                     </CardActionArea>
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="h2">
@@ -66,7 +67,9 @@ function Score ({c_quite, c_safety, c_traffic, quite, safety, traffic, result, c
                     </CardContent>
                 </Card>
             </div>
-            <Button color="primary" variant="contained" className="submit_btn"><a href="http://localhost:3000/">Go Back</a></Button>
+            <div className="submit_btn">
+                <Button color="primary" variant="contained"><a href="http://localhost:3000/">Go Back</a></Button>
+            </div>
         </div>
         
     )

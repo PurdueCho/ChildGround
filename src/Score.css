@@ -35,8 +35,11 @@
     margin: 30px;
     width: 500px;
 }
-
+.submit_btn {
+    margin-bottom: 25px;
+}
 .submit_btn a {
     color: white;
     text-decoration: none;
+
 }
