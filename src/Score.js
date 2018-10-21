@@ -1,26 +1,78 @@
-import React  from 'react';
+import React from 'react';
+import './Score.css';
+import { withStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
-// Dumb component
+import card from './asset/card.jpg';
 
-function Score ({c_quite, c_safety, c_traffic, quite, safety, traffic, result}) {
+const styles = theme => ({
+    card: {
+        maxWidth: 345,
+    },
+    media: {
+        height: 140,
+    },
+});
+
+function Score ({c_quite, c_safety, c_traffic, quite, safety, traffic, result, c_name, name}) {
+    let c_url = "https://www.google.com/maps/search/" + c_name;
+    let url = "https://www.google.com/maps/search/" + name;
     return (
         <div className ="contaioner">
-            <div className ="c_Scores">
-                <h1>Current Quite Score: {c_quite}</h1>
-                <h1>Current Safety Score: {c_safety}</h1>
-                <h1>Current Traffic Score: {c_traffic}</h1>
+            <div className = "Upper">
+                <Card className ="c_Scores">
+                    <CardActionArea>
+                        <a href={c_url} target="_blank"><img src = {card} alt ="Sample House" /></a>
+                    </CardActionArea>
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2">
+                            {c_name}
+                        </Typography>
+                        <Typography component="p">
+                            Quite Score: {c_quite} <br /> 
+                            Safety Score: {c_safety} <br /> 
+                            Traffic Score: {c_traffic} <br />
+                        </Typography>
+                    </CardContent>
+                </Card>
+                <Card className ="Scores">
+                    <CardActionArea>
+                        <a href={url} target="_blank"><img src = {card} alt ="Sample House" /></a>
+                    </CardActionArea>
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2">
+                            {name}
+                        </Typography>
+                        <Typography component="p">
+                            Quite Score: {quite} <br /> 
+                            Safety Score: {safety} <br /> 
+                            Traffic Score: {traffic} <br />
+                        </Typography>
+                    </CardContent>
+                </Card>
             </div>
-            <div className="Scores">
-                <h1>Quite Score: {quite}</h1>
-                <h1>Safety Score: {safety}</h1>
-                <h1>Traffic Score: {traffic}</h1>
+            <div className = "Lower">
+                <Card className="Result"> 
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2">
+                            Result
+                        </Typography>
+                        <Typography component="p">
+                            {result}
+                        </Typography>
+                    </CardContent>
+                </Card>
             </div>
-            <div className="Result">
-                <h1>Result: {result}</h1>
+            <div className="submit_btn">
+                <Button color="primary" variant="contained"><a href="https://childground-9e779.firebaseapp.com/">Go Back</a></Button>
             </div>
-            <button><a href="http://localhost:3000/">Go Back</a></button>
         </div>
+        
     )
 }
 
-export default Score
+export default withStyles(styles)(Score)

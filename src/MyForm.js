@@ -1,22 +1,35 @@
 import React, { Component } from 'react';
-import Form from 'muicss/lib/react/form';
-import Input from 'muicss/lib/react/input';
-import Button from 'muicss/lib/react/button';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import Button from '@material-ui/core/Button';
+import './MyForm.css'
 
-// street-number=110&street-name=E%20Columbia%20street&city=West%20lafayette&state=IN
+const styles = theme => ({
+  formControl: {
+    margin: theme.spacing.unit,
+  },
+});
 
 class MyForm extends Component {
-  state = {
-    c_streetNumber: '',
-    c_streetName: '',
-    c_city:'',
-    c_state:'',
-    c_zipcode:'',
-    streetNumber: '',
-    streetName: '',
-    city:'',
-    state:'',
-    zipcode:'',
+  constructor() {
+    super();
+    this.state = {
+      c_streetNumber: '',
+      c_streetName: '',
+      c_city:'',
+      c_state:'',
+      c_zipcode:'',
+      streetNumber: '',
+      streetName: '',
+      city:'',
+      state:'',
+      zipcode:'',
+      shown: true,
+    };
   }
 
   _getC_Query = () => {
@@ -32,17 +45,21 @@ class MyForm extends Component {
   handleChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value
-    })
+    });
   }
 
   handleSubmit = (e) => {
-    // 페이지 리로딩 방지
+    // 
     e.preventDefault();
-    // 상태값을 onCreate 를 통하여 부모에게 전달
+
+    // pass to parent
     const c_query = this._getC_Query().replace(/\s/g, "%20");
     const query = this._getQuery().replace(/\s/g, "%20");
-    this.props.onCreate({c_query, query});
-    // 상태 초기화
+    const c_name = this.state.c_streetNumber + " " + this.state.c_streetName + " " + this.state.c_city + " " + this.state.c_state + " " + this.state.c_zipcode;
+    const name = this.state.streetNumber + " " + this.state.streetName + " " + this.state.city + " " + this.state.state + " " + this.state.zipcode;
+    this.props.onCreate({c_query, query, c_name, name});
+
+    // on submit
     this.setState({
       c_streetNumber: '',
       c_streetName: '',
@@ -54,85 +71,134 @@ class MyForm extends Component {
       city:'',
       state:'',
       zipcode:'',
+      shown: !this.state.shown,
     });
   }
   render() {
+    const { classes } = this.props;
+    let shown = {
+			display: this.state.shown ? "block" : "none"
+		};
+    
     return (
-      // <Form>
-      //   <legend>Title</legend>
-      //   <Input placeholder="Input 1" />
-      //   <Input placeholder="Input 2" />
-      //   <Textarea placeholder="Textarea" />
-      //   <Button variant="raised">Submit</Button>
-      // </Form>
-      <Form onSubmit={this.handleSubmit} className="Form">
-        <legend>Enter Current Address</legend>
-        <Input
-          placeholder = "Current Street Number"
-          value={this.state.c_streetNumber}
-          onChange={this.handleChange}
-          name="c_streetNumber"
-        />
-        <Input
-          placeholder = "Current Street Name"
-          value={this.state.c_streetName}
-          onChange={this.handleChange}
-          name="c_streetName"
-        />
-        <Input
-          placeholder = "Current City"
-          value={this.state.c_city}
-          onChange={this.handleChange}
-          name="c_city"
-        />
-        <Input
-          placeholder = "Current State"
-          value={this.state.c_state}
-          onChange={this.handleChange}
-          name="c_state"
-        />
-        <Input
-          placeholder = "Current Zipcode"
-          value={this.state.c_zipcode}
-          onChange={this.handleChange}
-          name="c_zipcode"
-        />
-        <legend>Enter Interested Address</legend>
-        <Input
-          placeholder = "Street Number"
-          value={this.state.streetNumber}
-          onChange={this.handleChange}
-          name="streetNumber"
-        />
-        <Input
-          placeholder="Street Name"
-          value={this.state.streetName}
-          onChange={this.handleChange}
-          name="streetName"
-        />
-        <Input
-          placeholder="City"
-          value={this.state.city}
-          onChange={this.handleChange}
-          name="city"
-        />
-        <Input
-          placeholder="State"
-          value={this.state.state}
-          onChange={this.handleChange}
-          name="state"
-        />
-        <Input
-          placeholder="Zipcode"
-          value={this.state.zipcode}
-          onChange={this.handleChange}
-          name="zipcode"
-        />
-        <Button variant="raised" type="submit">Submit</Button>
-      </Form>
+      <div className="MyForm" style = {shown}>
+        <form onSubmit={this.handleSubmit}>
+          <div className="form_contaioner">
+            <FormGroup className="_col1">
+              <legend className="_col_legend">Enter Current Address</legend>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="component-simple">Street Number</InputLabel>
+                <Input
+                  placeholder = "Street number of the address (e.g. '1')"
+                  value={this.state.c_streetNumber}
+                  onChange={this.handleChange}
+                  name="c_streetNumber"
+                  required = {true}
+                />
+              </FormControl>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="component-simple">Street Name</InputLabel>
+                <Input
+                  placeholder = "Street name of the address (e.g. 'Main Street')"
+                  value={this.state.c_streetName}
+                  onChange={this.handleChange}
+                  name="c_streetName"
+                  required = {true}
+                />
+              </FormControl>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="component-simple">City</InputLabel>
+                <Input
+                  placeholder = "City name (e.g. 'Boston')"
+                  value={this.state.c_city}
+                  onChange={this.handleChange}
+                  name="c_city"
+                  required = {true}
+                />
+              </FormControl>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="component-simple">State</InputLabel>
+                <Input
+                  placeholder = "State name (as standard USPS 2-letter abbreviation, e.g. 'MA')"
+                  value={this.state.c_state}
+                  onChange={this.handleChange}
+                  name="c_state"
+                  required = {true}
+                />
+              </FormControl>
+              <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="component-simple">Zipcode</InputLabel>
+              <Input
+                placeholder = "ZIP code (e.g. '02129') (Optional)"
+                value={this.state.c_zipcode}
+                onChange={this.handleChange}
+                name="c_zipcode"
+              />
+            </FormControl>
+            </FormGroup>
+            <FormGroup className="_col2">
+            <legend className="_col_legend">Enter Interested Address</legend>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="component-simple">Street Number</InputLabel>
+                <Input
+                  placeholder = "Street number of the address (e.g. '1')"
+                  value={this.state.streetNumber}
+                  onChange={this.handleChange}
+                  name="streetNumber"
+                  required = {true}
+                />
+              </FormControl>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="component-simple">Street Name</InputLabel>
+                <Input
+                  placeholder="Street name of the address (e.g. 'Main Street')"
+                  value={this.state.streetName}
+                  onChange={this.handleChange}
+                  name="streetName"
+                  required = {true}
+                />
+              </FormControl>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="component-simple">City</InputLabel>
+                <Input
+                  placeholder="City name (e.g. 'Boston')"
+                  value={this.state.city}
+                  onChange={this.handleChange}
+                  name="city"
+                  required = {true}
+                />
+              </FormControl>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="component-simple">State</InputLabel>
+                <Input
+                  placeholder="State name (as standard USPS 2-letter abbreviation, e.g. 'MA')"
+                  value={this.state.state}
+                  onChange={this.handleChange}
+                  name="state"
+                  required = {true}
+                />
+              </FormControl>
+              <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="component-simple">Zipcode</InputLabel>
+              <Input
+                placeholder = "ZIP code (e.g. '02129') (Optional)"
+                value={this.state.zipcode}
+                onChange={this.handleChange}
+                name="zipcode"
+              />
+            </FormControl>
+            </FormGroup>
+          </div>
+          <div className="form_btn">
+            <Button variant="contained" color="primary" type="submit" className="_btn_sub">Submit</Button>
+          </div>
+        </form>
+      </div>
     );
   }
 }
+MyForm.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
 
-
-export default MyForm;
+export default withStyles(styles)(MyForm);

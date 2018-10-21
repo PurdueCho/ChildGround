@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Score from './Score';
-import './App.css';
+import './GetData.css';
 
 const API = "https://apis.solarialabs.com/shine/v1/total-home-scores/reports?";
 const DEFAULT_QUERY = "street-number=110&street-name=E%20Columbia%20street&city=West%20lafayette&state=IN";
@@ -23,7 +23,7 @@ class GetData extends Component {
     const score = this.state.scores;
     // console.log(c_score, score);
     const result = this._getResult();
-    console.log(result)
+    // console.log(result)
 
     return <Score
       c_quite={c_score.quiet ? c_score.quiet.value : 'Sorry, no information on this address'}
@@ -33,6 +33,8 @@ class GetData extends Component {
       safety={score.safety ? score.safety.value : 'Sorry, no information on this address'}
       traffic={score.traffic ? score.traffic.value : 'Sorry, no information on this address'}
       result={result}
+      c_name={this.props.c_name}
+      name={this.props.name}
     />
   }
 
@@ -51,7 +53,10 @@ class GetData extends Component {
     const NOTWORTH = "Not Worth";
     const MODERATE = "Moderate";
     const WORTH = "Worth";
+    const FAILURE = "Sorry, not enough information to estimate";
 
+    // console.log(result)
+    if (result === 0) return FAILURE;
     if (result < 10) return NOTWORTH
     if (result >= 10 && result <30) return MODERATE
     if (result >=30) return WORTH
@@ -71,12 +76,16 @@ class GetData extends Component {
  
   _callApi = (query) => {
     const QUERY = query;
-    return fetch(API + DEFAULT_QUERY + API_KEY)
+    // return fetch(API + DEFAULT_QUERY + API_KEY)
     //return fetch(API + FIL_QUERY + API_KEY)
-    // return fetch(API + QUERY + API_KEY)
+    return fetch(API + QUERY + API_KEY)
       .then(response => response.json())
       .then(data => data.totalHomeScores)
-      .catch(err => console.log(err))
+      .catch(error => {
+        console.log(error)
+        alert("Sorry :( It's invalid information");
+        window.location.href = "/";
+      })
   }
 
 
@@ -84,7 +93,7 @@ class GetData extends Component {
     // console.log('did render')
     const {scores} = this.state
     return (
-      <div className={ scores ? "App" : "App--loading" } >
+      <div className={ scores ? "GetData" : "GetData--loading" } >
         { this.state.scores ? this._renderScores() : 'Loading' }
       </div>
     );
@@ -102,8 +111,10 @@ function Result (c_quite, c_safety, c_traffic, quite, safety, traffic) {
     let t_score = traffic * 0.2;
     let sub = q_score + s_score + t_score;
 
-    let diff = c_sub - sub;
-    
+    if (c_sub === 0 || sub === 0) {
+      return 0;
+    }
+    let diff = sub - c_sub;
     return diff 
 }
 
