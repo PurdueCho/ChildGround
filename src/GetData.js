@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
-import Score from './Score'
+import Score from './Score';
 import './App.css';
 
 const API = "https://apis.solarialabs.com/shine/v1/total-home-scores/reports?";
-const DEFAULT_QUERY = "street-number=110&street-name=E%20Columbia%20street&city=West%20lafayette&state=IN&apikey=";
-const API_KEY = "PxuJn2DYpLkigdkTuOmMi7w8tzKJSMKV";
+const DEFAULT_QUERY = "street-number=110&street-name=E%20Columbia%20street&city=West%20lafayette&state=IN";
+const FIL_QUERY = "street-number=5842&street-name=Sterling%20Greens%20Circle&city=Pleasanton&state=CA"
+const API_KEY = "&apikey=PxuJn2DYpLkigdkTuOmMi7w8tzKJSMKV";
 
 class GetData extends Component {
   constructor() {
     super();
-    this.state = {}
+    this.state = {
+    }
   }
   
   componentDidMount() {
@@ -17,25 +19,61 @@ class GetData extends Component {
   };
 
   _renderScores = () => {
+    const c_score = this.state.c_scores;
     const score = this.state.scores;
-    console.log(score);
+    // console.log(c_score, score);
+    const result = this._getResult();
+    console.log(result)
+
     return <Score
-      quite={score.quiet.value}
-      safety={score.safety.value}
-      traffic={score.traffic.value}
-      />
+      c_quite={c_score.quiet ? c_score.quiet.value : 'Sorry, no information on this address'}
+      c_safety={c_score.safety ? c_score.safety.value : 'Sorry, no information on this address'}
+      c_traffic={c_score.traffic ? c_score.traffic.value : 'Sorry, no information on this address'}
+      quite={score.quiet ? score.quiet.value : 'Sorry, no information on this address'}
+      safety={score.safety ? score.safety.value : 'Sorry, no information on this address'}
+      traffic={score.traffic ? score.traffic.value : 'Sorry, no information on this address'}
+      result={result}
+    />
+  }
+
+  _getResult = () => {
+    const c_score = this.state.c_scores;
+    const score = this.state.scores;
+
+    let result = Result (
+      c_score.quiet?c_score.quiet.value:0,
+      c_score.safety?c_score.safety.value:0,
+      c_score.traffic?c_score.traffic.value:0,
+      score.quiet?score.quiet.value :0,
+      score.safety?score.safety.value :0,
+      score.traffic?score.traffic.value :0
+    )
+    const NOTWORTH = "Not Worth";
+    const MODERATE = "Moderate";
+    const WORTH = "Worth";
+
+    if (result < 10) return NOTWORTH
+    if (result >= 10 && result <30) return MODERATE
+    if (result >=30) return WORTH
+
   }
 
   _getScores = async () => {
-    const scores = await this._callApi(); // wait til function is complete
-    console.log(scores)
+    const c_scores = await this._callApi(this.props.c_query); // wait til function is complete
+    const scores = await this._callApi(this.props.query); // wait til function is complete
+    // console.log({c_scores, scores})
     this.setState({
+      c_scores,
       scores
     });
   };
+
  
-  _callApi = () => {
+  _callApi = (query) => {
+    const QUERY = query;
     return fetch(API + DEFAULT_QUERY + API_KEY)
+    //return fetch(API + FIL_QUERY + API_KEY)
+    // return fetch(API + QUERY + API_KEY)
       .then(response => response.json())
       .then(data => data.totalHomeScores)
       .catch(err => console.log(err))
@@ -51,6 +89,22 @@ class GetData extends Component {
       </div>
     );
   }
+}
+
+function Result (c_quite, c_safety, c_traffic, quite, safety, traffic) {
+    let c_q_score = c_quite * 0.45;
+    let c_s_score = c_safety * 0.35;
+    let c_t_score = c_traffic * 0.2;
+    let c_sub = c_q_score + c_s_score + c_t_score;
+
+    let q_score = quite * 0.45;
+    let s_score = safety * 0.35;
+    let t_score = traffic * 0.2;
+    let sub = q_score + s_score + t_score;
+
+    let diff = c_sub - sub;
+    
+    return diff 
 }
 
 export default GetData;
