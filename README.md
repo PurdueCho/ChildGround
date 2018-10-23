@@ -8,7 +8,7 @@
 - Determine whether the interest area is safer than the current region through Built-in equation.
 
 # Tech-stacks
-- React JS, Javascripts, Firebase, CSS, Material-UI
+- React JS, Javascripts, Firebase, CSS, Material-UI & Swift(iOS)
 - API : https://developers.solarialabs.com/
 
 # https://childground-9e779.firebaseapp.com/
